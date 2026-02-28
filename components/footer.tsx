@@ -1,30 +1,29 @@
 import Link from "next/link"
-import { Shield } from "lucide-react"
 
 export function Footer() {
   return (
     <footer className="border-t border-border bg-background">
-      <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-4 px-4 py-8 md:flex-row lg:px-8">
-        <div className="flex items-center gap-2">
-          <Shield className="h-5 w-5 text-primary" />
-          <span className="text-sm font-semibold text-foreground">Rico</span>
+      <div className="mx-auto flex max-w-[1200px] flex-col items-center justify-between gap-4 px-6 py-8 md:flex-row lg:px-8">
+        <div className="font-mono text-sm font-bold tracking-tight text-foreground">
+          RICO<span className="text-primary">.</span>
         </div>
 
-        <nav className="flex gap-6 text-sm text-muted-foreground" aria-label="Footer navigation">
+        <nav className="flex gap-8 font-mono text-xs uppercase tracking-wider text-muted-foreground" aria-label="Footer navigation">
           <Link href="/docs" className="hover:text-foreground transition-colors">
             Docs
           </Link>
           <Link href="/install" className="hover:text-foreground transition-colors">
             Install
           </Link>
-          <Link href="/try" className="hover:text-foreground transition-colors">
-            Try Online
-          </Link>
+          <a 
+            href="https://github.com" 
+            target="_blank" 
+            rel="noopener noreferrer" 
+            className="hover:text-foreground transition-colors"
+          >
+            GitHub
+          </a>
         </nav>
-
-        <p className="text-xs text-muted-foreground">
-          Rico &mdash; AI-Driven API Security Scanner
-        </p>
       </div>
     </footer>
   )
