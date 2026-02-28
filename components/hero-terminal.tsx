@@ -1,7 +1,6 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import Image from "next/image"
 
 interface TerminalLine {
   text: string
@@ -40,18 +39,13 @@ export function HeroTerminal() {
   const [visibleLines, setVisibleLines] = useState<TerminalLine[]>([])
   const [currentIndex, setCurrentIndex] = useState(0)
   const [showCursor, setShowCursor] = useState(true)
-  const [scanComplete, setScanComplete] = useState(false)
 
   useEffect(() => {
     if (currentIndex >= terminalSequence.length) {
-      // Mark scan as complete
-      setScanComplete(true)
-      
       // Loop the animation
       const resetTimer = setTimeout(() => {
         setVisibleLines([])
         setCurrentIndex(0)
-        setScanComplete(false)
       }, 3000)
       return () => clearTimeout(resetTimer)
     }
@@ -104,21 +98,7 @@ export function HeroTerminal() {
       </div>
 
       {/* Terminal content */}
-      <div className="relative p-6 font-mono text-[13px] leading-relaxed">
-        {/* Nyan Cat - show only while scanning */}
-        {!scanComplete && currentIndex > 0 && (
-          <div className="mb-4 flex justify-center">
-            <Image 
-              src="/nyan-cat.gif" 
-              alt="Scanning..." 
-              width={200} 
-              height={100}
-              unoptimized
-              className="opacity-90"
-            />
-          </div>
-        )}
-        
+      <div className="p-6 font-mono text-[13px] leading-relaxed">
         <div className="space-y-1">
           {visibleLines.map((line, index) => (
             <div key={index} className={getLineColor(line.type)}>
