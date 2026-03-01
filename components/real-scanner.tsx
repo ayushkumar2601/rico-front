@@ -23,6 +23,7 @@ import {
 } from "lucide-react"
 import { startScan, getScanStatus, runDemoScan, getScanLogs, type ScanStatusResponse, type ScanResult, APIError } from "@/lib/api"
 import { AnimatedTerminal } from "@/components/animated-terminal"
+import { ScanResultsDashboard } from "@/components/scan-results-dashboard"
 
 type ScanPhase = "idle" | "uploading" | "queued" | "running" | "completed" | "failed"
 
@@ -502,178 +503,13 @@ export function RealScanner() {
         </Card>
       )}
 
-      {/* Results Display */}
+      {/* Results Display - New Dashboard */}
       {isCompleted && result && (
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <FileText className="h-5 w-5 text-primary" />
-              Scan Results
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <Tabs defaultValue="summary" className="w-full">
-              <TabsList className="grid w-full grid-cols-3">
-                <TabsTrigger value="summary">Summary</TabsTrigger>
-                <TabsTrigger value="vulnerabilities">Vulnerabilities</TabsTrigger>
-                <TabsTrigger value="raw">Raw Data</TabsTrigger>
-              </TabsList>
-
-              {/* Summary Tab */}
-              <TabsContent value="summary" className="space-y-4">
-                <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-                  <Card>
-                    <CardHeader className="pb-2">
-                      <CardTitle className="text-sm font-medium text-muted-foreground">
-                        Risk Score
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="flex items-center gap-2">
-                        <TrendingUp className="h-4 w-4 text-destructive" />
-                        <span className="text-2xl font-bold">{result.risk_score}</span>
-                        <Badge variant={
-                          result.risk_level === "Critical" ? "destructive" :
-                          result.risk_level === "High" ? "destructive" :
-                          result.risk_level === "Medium" ? "default" : "secondary"
-                        }>
-                          {result.risk_level}
-                        </Badge>
-                      </div>
-                    </CardContent>
-                  </Card>
-
-                  <Card>
-                    <CardHeader className="pb-2">
-                      <CardTitle className="text-sm font-medium text-muted-foreground">
-                        Vulnerabilities
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="text-2xl font-bold">{result.total_vulnerabilities}</div>
-                      <p className="text-xs text-muted-foreground">issues found</p>
-                    </CardContent>
-                  </Card>
-
-                  <Card>
-                    <CardHeader className="pb-2">
-                      <CardTitle className="text-sm font-medium text-muted-foreground">
-                        Endpoints Tested
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="text-2xl font-bold">
-                        {result.endpoints_tested}/{result.total_endpoints}
-                      </div>
-                      <p className="text-xs text-muted-foreground">endpoints scanned</p>
-                    </CardContent>
-                  </Card>
-
-                  <Card>
-                    <CardHeader className="pb-2">
-                      <CardTitle className="text-sm font-medium text-muted-foreground">
-                        <Clock className="inline h-4 w-4" /> Duration
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="text-2xl font-bold">{result.duration.toFixed(1)}s</div>
-                      <p className="text-xs text-muted-foreground">scan time</p>
-                    </CardContent>
-                  </Card>
-                </div>
-
-                {/* Severity Distribution */}
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="text-sm">Severity Distribution</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-2">
-                      {Object.entries(result.severity_distribution).map(([severity, count]) => (
-                        count > 0 && (
-                          <div key={severity} className="flex items-center justify-between">
-                            <Badge variant={
-                              severity === "Critical" ? "destructive" :
-                              severity === "High" ? "destructive" :
-                              severity === "Medium" ? "default" : "secondary"
-                            }>
-                              {severity}
-                            </Badge>
-                            <span className="text-sm font-medium">{count}</span>
-                          </div>
-                        )
-                      ))}
-                    </div>
-                  </CardContent>
-                </Card>
-
-                {/* Top Issue */}
-                {result.top_issue && (
-                  <Alert>
-                    <AlertCircle className="h-4 w-4" />
-                    <AlertDescription>
-                      <strong>Top Issue:</strong> {result.top_issue}
-                    </AlertDescription>
-                  </Alert>
-                )}
-              </TabsContent>
-
-              {/* Vulnerabilities Tab */}
-              <TabsContent value="vulnerabilities" className="space-y-4">
-                {result.vulnerabilities.length === 0 ? (
-                  <Alert>
-                    <CheckCircle2 className="h-4 w-4" />
-                    <AlertDescription>
-                      No vulnerabilities detected. Your API appears secure!
-                    </AlertDescription>
-                  </Alert>
-                ) : (
-                  <div className="space-y-3">
-                    {result.vulnerabilities.map((vuln, index) => (
-                      <Card key={index}>
-                        <CardHeader className="pb-3">
-                          <div className="flex items-start justify-between">
-                            <div className="space-y-1">
-                              <CardTitle className="text-base">{vuln.type}</CardTitle>
-                              <CardDescription className="text-xs">
-                                {vuln.method} {vuln.endpoint}
-                              </CardDescription>
-                            </div>
-                            <Badge variant={
-                              vuln.severity === "Critical" ? "destructive" :
-                              vuln.severity === "High" ? "destructive" :
-                              vuln.severity === "Medium" ? "default" : "secondary"
-                            }>
-                              {vuln.severity}
-                            </Badge>
-                          </div>
-                        </CardHeader>
-                        <CardContent className="space-y-2">
-                          <p className="text-sm text-muted-foreground">{vuln.description}</p>
-                          <div className="flex items-center gap-4 text-xs text-muted-foreground">
-                            <span>Confidence: {vuln.confidence}%</span>
-                            <span>CVSS: {vuln.cvss_score}</span>
-                          </div>
-                        </CardContent>
-                      </Card>
-                    ))}
-                  </div>
-                )}
-              </TabsContent>
-
-              {/* Raw Data Tab */}
-              <TabsContent value="raw">
-                <Card>
-                  <CardContent className="pt-6">
-                    <pre className="overflow-auto rounded-lg bg-muted p-4 text-xs">
-                      {JSON.stringify(result, null, 2)}
-                    </pre>
-                  </CardContent>
-                </Card>
-              </TabsContent>
-            </Tabs>
-          </CardContent>
-        </Card>
+        <ScanResultsDashboard 
+          result={result} 
+          scanId={scanId || "unknown"} 
+          targetUrl={baseUrl}
+        />
       )}
     </div>
   )
