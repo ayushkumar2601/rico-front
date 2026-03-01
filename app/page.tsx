@@ -17,7 +17,7 @@ export default function LandingPage() {
                   SYSTEM VERSION 1.0 // OPERATIONAL
                 </div>
                 <h1 className="text-[clamp(6rem,18vw,13.5rem)] font-extrabold leading-[0.85] tracking-[-0.04em] text-foreground">
-                  RICO<span className="inline-block h-[0.2em] w-[0.2em] translate-y-[-0.5em] rounded-full bg-primary"></span>
+                  RICO
                 </h1>
                 <div className="text-[clamp(1.5rem,3.75vw,2.25rem)] font-bold uppercase tracking-tight text-foreground/90">
                   AUTONOMOUS API SECURITY ORCHESTRATION
