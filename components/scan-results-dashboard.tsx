@@ -355,7 +355,10 @@ export function ScanResultsDashboard({ result, scanId, targetUrl }: ScanResultsD
                     <div className="text-xs text-muted-foreground">CVSS</div>
                   </div>
                 </div>
-                <Button size="sm" variant="outline" className="mt-2">
+                <Button 
+                  size="sm" 
+                  className="mt-2 bg-primary text-black hover:bg-primary/90 font-medium"
+                >
                   <Zap className="h-3 w-3 mr-1" />
                   View Fix
                 </Button>
